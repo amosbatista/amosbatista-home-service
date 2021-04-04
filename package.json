@@ -4,7 +4,9 @@
   "description": "Modelo de projeto de Lambda",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "serverless invoke local -f home-list-a",
+    "deploy": "serverless deploy"
   },
   "dependencies": {
     "aws-sdk": "^2.468.0",
