@@ -3,10 +3,10 @@ import { Handler, Callback } from 'aws-lambda';
 import { HomeListService } from './src/home/HomeListService';
 
 export const homeList: Handler = async (event: any, context: any, callback: Callback) => {
-    event; context;
+    context;
 
     const listService = new HomeListService();
-    const responseBody = await listService.Load(); 
+    const responseBody = await listService.Load(event.page); 
 
     var response = {
         "statusCode": 200,
