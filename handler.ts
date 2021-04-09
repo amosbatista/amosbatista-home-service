@@ -6,7 +6,7 @@ export const homeList: Handler = async (event: any, context: any, callback: Call
     context;
 
     const listService = new HomeListService();
-    const responseBody = await listService.Load(event['queryStringParameters']['page']); 
+    const responseBody = await listService.Load(event.queryStringParameters? event.queryStringParameters.page : undefined); 
 
     var response = {
         "statusCode": 200,
