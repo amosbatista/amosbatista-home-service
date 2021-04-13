@@ -5,18 +5,21 @@
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "serverless invoke local -f home-list-a",
+    "start": "serverless invoke local -f home-list-a",
     "deploy": "serverless deploy"
   },
   "dependencies": {
     "aws-sdk": "^2.468.0",
+    "redis": "^3.1.0",
     "serverless-plugin-existing-s3": "^2.4.0",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/node": "^10.12.18",
-    "serverless-offline": "^5.0.1",
+    "@types/redis": "^2.8.28",
+    "serverless-offline": "^6.9.0",
+    "serverless-offline-redis-server": "0.0.2",
     "serverless-webpack": "^5.2.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.2.4",

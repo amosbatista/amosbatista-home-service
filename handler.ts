@@ -6,15 +6,37 @@ export const homeList: Handler = async (event: any, context: any, callback: Call
     context;
 
     const listService = new HomeListService();
-    const responseBody = await listService.Load(event.queryStringParameters? event.queryStringParameters.page : undefined); 
+    var response:any;
+    var error:string;
 
-    var response = {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Origin" : "*"
-        },
-        "body": JSON.stringify(responseBody),
-        "isBase64Encoded": false
-    };
+    const responseBody = await listService.Load(
+        event.queryStringParameters ? 
+        event.queryStringParameters.page : 
+        undefined
+    ).catch( clientError => {
+        error = JSON.stringify(clientError);
+    }); 
+
+    if(error) {
+        response = {
+            "statusCode": 500,
+            "headers": {
+                "Access-Control-Allow-Origin" : "*"
+            },
+            "body": error,
+            "isBase64Encoded": false
+        };
+    }
+    else {
+        response = {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin" : "*"
+            },
+            "body": JSON.stringify(responseBody),
+            "isBase64Encoded": false
+        };
+    }
+    
     callback(null, response);
 };

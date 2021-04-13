@@ -1,4 +1,5 @@
 import content from './homeContent.json';
+import redisClientFactory from '../redis/ClientFactory';
 
 export class HomeListService {
 
@@ -10,12 +11,23 @@ export class HomeListService {
     this.pageSize = pageSize || 3;
   }
 
-  async Load (_page?: number) {
-    const page = (!_page || _page < 1) ? 1 : _page;
+  Load (_page?: number) {
+    _page;
+    const client = redisClientFactory();
 
-    return await this.homeContent.slice(
-      (page - 1) * this.pageSize,
-      page * this.pageSize
-    );
+    client.set("foo", "bar");
+
+    return new Promise ( (response, reject) => {
+      client.get("foo", (err, redisResponse) => {
+        client.quit();
+        
+        if(err) {
+          reject(err);
+        }
+        else{
+          response(redisResponse);
+        }
+      })
+    });
   }
 }
