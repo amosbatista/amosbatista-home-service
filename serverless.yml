@@ -13,3 +13,5 @@ provider:
 functions:
   home-list-a:
     handler: handler.homeList
+  home-generate:
+    handler: handler.homeGenerate
