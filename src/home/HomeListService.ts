@@ -1,21 +1,36 @@
-import content from './homeContent.json';
+import pageValuesService from '../utils/PaginationValuesService';
 
-export class HomeListService {
+export default class HomeListService {
 
+  CHAVE_REDIS = "HOME:CONTENT";
   homeContent: Array<any>;
-  pageSize: number;
+  pageSize: number = 3;
+  client: any;
 
-  constructor (pageSize?: number) {
-    this.homeContent = content;
-    this.pageSize = pageSize || 3;
+  constructor (redisClientFactory: Function, pageSize?: number) {
+    this.pageSize = pageSize || this.pageSize;
+    this.client = redisClientFactory();
   }
 
-  async Load (_page?: number) {
+  Load (_page?: number): Promise<Array<any>> {  
     const page = (!_page || _page < 1) ? 1 : _page;
+    const pageInfo = pageValuesService(page, this.pageSize);
 
-    return await this.homeContent.slice(
-      (page - 1) * this.pageSize,
-      page * this.pageSize
-    );
+    return new Promise( (resolve, reject) => {
+      this.client.lrange(
+        this.CHAVE_REDIS,
+        pageInfo.takeFrom, pageInfo.takeTo,
+
+        (err, redisResponse) => {
+          this.client.quit();
+        
+          if(err) {
+            reject(err);
+          }
+          else{
+            resolve(redisResponse);
+          }
+      });
+    });
   }
 }
