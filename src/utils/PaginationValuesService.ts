@@ -4,6 +4,6 @@ export default ( _page?: number, _pageSize?: number) => {
 
   return {
     takeFrom: (page - 1) * pageSize,
-    takeTo: page * pageSize
+    takeTo: (page * pageSize) -1
   };
 }

@@ -11,7 +11,7 @@ class HomeGenerateService {
   saveList(content: Array<HomeContentInterface>) {
     this.client.del(this.CHAVE_REDIS);
     content.forEach( (post) => {
-      this.client.rpush(this.CHAVE_REDIS, post);
+      this.client.rpush(this.CHAVE_REDIS, JSON.stringify(post));
     });
 
     this.client.quit();
