@@ -1,0 +1,9 @@
+{
+  "root": "HOME",
+  "links": [
+    {
+      "topContent": "TOPCONTENT",
+      "highLights": "HIGHLIGHTS"
+    }
+  ]
+}
