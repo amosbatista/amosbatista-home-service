@@ -11,7 +11,7 @@ provider:
   runtime: nodejs14.x
 
 functions:
-  home-list-a:
-    handler: handler.homeList
+  home-content:
+    handler: handler.homeContent
   home-generate:
     handler: handler.homeGenerate
