@@ -44,15 +44,14 @@ export const homeGenerate: Handler = async (event: APIGatewayProxyEvent, context
 
     const listService = new HomeGenerateService(redisClientFactory);
     var response:any;
-
     const parsedBody = JSON.parse(event.body);
 
     listService.SaveTopContent(
-        parsedBody.content.topContent
+        parsedBody.topContent
     );
     
     listService.SaveHighlights(
-        parsedBody.content.highlights
+        parsedBody.highlights
     );
 
     response = {
