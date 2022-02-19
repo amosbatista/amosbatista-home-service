@@ -1,22 +1,17 @@
-import HomeMap from "./Home.json"
+import Map from "./Map.json"
 
 export default class MapTranslatorService {
   
   GetMapAddress (root: string, endPoint: string ): string|null {
-    const maps = [{
-      "home": HomeMap,
-    }];
     
-    if(!maps[root]) {
+    if(!Map[root]) {
       return null;
     }
     
-    const link = maps[root]["links"].find(link => link === endPoint);
-    
-    if(!link) {
+    if(!Map[root]["links"][endPoint]) {
       return null;
     }
-    return maps[root]["root"] + ":" + link;
+    return Map[root]["root"] + ":" + Map[root]["links"][endPoint];
   }
   
 }

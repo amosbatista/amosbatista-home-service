@@ -4,7 +4,8 @@
   "description": "Modelo de projeto de Lambda",
   "main": "handler.js",
   "scripts": {
-    "start": "serverless invoke local -f home-list-a",
+    "home-generate": "serverless invoke local -f home-generate --path ./src/home/homeBodyMock.json",
+    "home-load": "serverless invoke local -f home-content",
     "deploy": "serverless deploy"
   },
   "dependencies": {
