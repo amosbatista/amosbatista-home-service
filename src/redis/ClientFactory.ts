@@ -6,15 +6,4 @@ export default () => {
   });
 
   return client;
-
-  /*return{
-    set: (key:string, value:string) => {
-      key; value;
-    },
-    get: (key:string, callback: Function) => {
-      key;
-      callback("error", null);
-    }
-  }*/
-
 };
