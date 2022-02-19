@@ -20,13 +20,20 @@ class HomeGenerateService {
     this.client.quit();
   }
   
-  SaveTopContent(content: Array<HomeContentInterface>) {
+  saveContent(content: HomeContentInterface, redisKey: string) {
+    this.client.del(redisKey);
+    this.client.set(redisKey, JSON.stringify(content));
+    
+    this.client.quit();
+  }
+  
+  SaveTopContent(content: HomeContentInterface) {
     const redisKey = this.mapTranslator.GetMapAddress("home", "topContent");
     
     if(!redisKey) {
       throw new Error("No link found");
     }
-    this.saveList(content, redisKey);
+    this.saveContent(content, redisKey);
   }
   
   SaveHighlights(content: Array<HomeContentInterface>) {

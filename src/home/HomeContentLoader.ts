@@ -21,6 +21,7 @@ export default class HomeTopContentLoader {
       ])
         .catch(err => reject(err))
         .then(contents => {
+          console.log(contents);
           resolve({
             topContent: contents[0],
             highLights: contents[1],
@@ -30,7 +31,7 @@ export default class HomeTopContentLoader {
    }
   
 
-  LoadHelper (root: string, address: string): Promise<Array<any>> {  
+  LoadHelper (root: string, address: string): Promise<any> {  
 
     return new Promise( (resolve, reject) => {
        const redisKey = this.mapTranslator.GetMapAddress(root, address);
