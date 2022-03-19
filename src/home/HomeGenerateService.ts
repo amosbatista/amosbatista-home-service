@@ -5,13 +5,15 @@ class HomeGenerateService {
   client: any;
 
   constructor (
-    redisClientFactory: Function,
+    private redisClientFactory: Function,
     private mapTranslator = new MapTranslatorService
   ) {
-    this.client = redisClientFactory();
+    this.client = null;
   }
 
   saveList(content: Array<HomeContentInterface>, redisKey: string) {
+    this.client = this.redisClientFactory();
+    
     this.client.del(redisKey);
     content.forEach( (post) => {
       this.client.rpush(redisKey, JSON.stringify(post));
@@ -21,6 +23,8 @@ class HomeGenerateService {
   }
   
   saveContent(content: HomeContentInterface, redisKey: string) {
+    this.client = this.redisClientFactory();
+    
     this.client.del(redisKey);
     this.client.set(redisKey, JSON.stringify(content));
     

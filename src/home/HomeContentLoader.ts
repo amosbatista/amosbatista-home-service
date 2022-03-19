@@ -6,22 +6,22 @@ export default class HomeTopContentLoader {
   client: any;
 
   constructor (
-    redisClientFactory: Function, 
+    private redisClientFactory: Function, 
     private mapTranslator = new MapTranslatorService
   ) {
-    this.client = redisClientFactory();
+    this.client = null;
   }
   
   Load (): Promise<Array<any>> { 
     return new Promise( (resolve, reject) => {
-      
+      this.client = this.redisClientFactory();
       Promise.all([
         this.LoadHelper("home", "topContent"),
-        this.LoadHelper("home", "highLights"),
+        this.ListLoadHelper("home", "highLights"),
       ])
         .catch(err => reject(err))
-        .then(contents => {
-          console.log(contents);
+        .then(contents => {   
+          this.client.quit();       
           resolve({
             topContent: contents[0],
             highLights: contents[1],
@@ -30,7 +30,36 @@ export default class HomeTopContentLoader {
     });
    }
   
+  ListLoadHelper (root: string, address: string): Promise<any> {  
 
+    return new Promise( (resolve, reject) => {
+       const redisKey = this.mapTranslator.GetMapAddress(root, address);
+    
+      if(!redisKey) {
+        reject("No link found");
+        
+        return;
+      }
+      
+      const FIRST_ITEM = 0, LAST_ITEM = -1;
+      
+      this.client.lrange(
+        redisKey,
+        FIRST_ITEM, LAST_ITEM,
+
+        (err, redisResponse) => {
+          this.client.quit();
+        
+          if(err) {
+            reject(err);
+          }
+          else{
+            resolve(redisResponse);
+          }
+      });
+    });
+  }
+  
   LoadHelper (root: string, address: string): Promise<any> {  
 
     return new Promise( (resolve, reject) => {
@@ -46,7 +75,6 @@ export default class HomeTopContentLoader {
         redisKey,
         
         (err, redisResponse) => {
-          this.client.quit();
         
           if(err) {
             reject(err);
