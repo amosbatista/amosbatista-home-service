@@ -1,21 +1,18 @@
 //import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context, Handler } from 'aws-lambda';
 import { Handler, Callback, APIGatewayProxyEvent } from 'aws-lambda';
 import redisClientFactory  from './src/redis/ClientFactory';
-import  HomeListService from './src/home/HomeListService';
-import  HomeGenerateService from './src/home/HomeGenerateService';
+import HomeContentService from './src/home/HomeContentLoader';
+import HomeGenerateService from './src/home/HomeGenerateService';
+import HomeRemoveOldListService from './src/home/homeRemoveOldList';
 
-export const homeList: Handler = async (event: any, context: any, callback: Callback) => {
-    context;
+export const homeContent: Handler = async (event: any, context: any, callback: Callback) => {
+    context;event;
 
-    const listService = new HomeListService(redisClientFactory);
+    const listService = new HomeContentService(redisClientFactory);
     var response:any;
     var error:string;
 
-    const responseBody = await listService.Load(
-        event.queryStringParameters ? 
-        event.queryStringParameters.page : 
-        undefined
-    ).catch( clientError => {
+    const responseBody = await listService.Load().catch( clientError => {
         error = JSON.stringify(clientError);
     }); 
 
@@ -46,13 +43,19 @@ export const homeList: Handler = async (event: any, context: any, callback: Call
 export const homeGenerate: Handler = async (event: APIGatewayProxyEvent, context: any, callback: Callback) => {
     context;
 
+    const removeOldListService = new HomeRemoveOldListService(redisClientFactory);
+    removeOldListService.removeList();
+    
     const listService = new HomeGenerateService(redisClientFactory);
     var response:any;
-
     const parsedBody = JSON.parse(event.body);
 
-    listService.saveList(
-        parsedBody.content
+    listService.SaveTopContent(
+        parsedBody.topContent
+    );
+    
+    listService.SaveHighlights(
+        parsedBody.highlights
     );
 
     response = {
