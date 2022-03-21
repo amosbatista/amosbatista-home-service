@@ -1,8 +1,9 @@
 //import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context, Handler } from 'aws-lambda';
 import { Handler, Callback, APIGatewayProxyEvent } from 'aws-lambda';
 import redisClientFactory  from './src/redis/ClientFactory';
-import  HomeContentService from './src/home/HomeContentLoader';
-import  HomeGenerateService from './src/home/HomeGenerateService';
+import HomeContentService from './src/home/HomeContentLoader';
+import HomeGenerateService from './src/home/HomeGenerateService';
+import HomeRemoveOldListService from './src/home/homeRemoveOldList';
 
 export const homeContent: Handler = async (event: any, context: any, callback: Callback) => {
     context;event;
@@ -42,6 +43,9 @@ export const homeContent: Handler = async (event: any, context: any, callback: C
 export const homeGenerate: Handler = async (event: APIGatewayProxyEvent, context: any, callback: Callback) => {
     context;
 
+    const removeOldListService = new HomeRemoveOldListService(redisClientFactory);
+    removeOldListService.removeList();
+    
     const listService = new HomeGenerateService(redisClientFactory);
     var response:any;
     const parsedBody = JSON.parse(event.body);
